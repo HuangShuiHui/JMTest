@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>autotest</groupId>
+    <artifactId>jmeter_test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!--阿里云资源库-->
+    <repositories>
+        <repository>
+            <id>aliyunmaven</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+    <!-- 依赖 -->
+    <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-plugin-api</artifactId>
+        <version>2.2.1</version>
+    </dependency>
+    </dependencies>
+
+    <properties>
+        <sampleName>qqqqqqqqqqq</sampleName>
+    </properties>
+
+    <!--配置环境变量-->
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+                <!--测试结果存放目录-->
+                <jmeter.result.jtl.dir>report/jtl/</jmeter.result.jtl.dir>
+                <jmeter.result.html.dir>report/html/</jmeter.result.html.dir>
+                <!--样式文件-->
+                <jmeter.stylesheet.dir></jmeter.stylesheet.dir>
+                <!--属性配置文件-->
+                <jmeter.properties.dir></jmeter.properties.dir>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <propertiesUser>
+                        <sampleName>google翻译</sampleName>
+                    </propertiesUser>
+                    <!--指定测试结果文件输出格式-->
+                    <resultsFileFormat>xml</resultsFileFormat>
+                    <resultsDirectory>${jmeter.result.jtl.dir}</resultsDirectory>
+                </configuration>
+
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
