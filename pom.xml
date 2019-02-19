@@ -24,7 +24,14 @@
     </dependencies>
 
     <properties>
+        <build_no>001</build_no>
         <sampleName>qqqqqqqqqqq</sampleName>
+        <jmeter.result.dir>report/</jmeter.result.dir>
+        <jmeter.result.jtl.dir>report/jtl/</jmeter.result.jtl.dir>
+        <jmeter.result.html.dir>report/html/</jmeter.result.html.dir>
+        <jmeter.stylesheet.dir>resource/stylesheet/</jmeter.stylesheet.dir>
+        <jmeter.properties.dir></jmeter.properties.dir>
+        <build_no>002</build_no>
     </properties>
 
     <!--配置环境变量-->
@@ -33,19 +40,30 @@
             <id>test</id>
             <properties>
                 <profiles.active>test</profiles.active>
-                <!--测试结果存放目录-->
-                <jmeter.result.jtl.dir>report/jtl/</jmeter.result.jtl.dir>
-                <jmeter.result.html.dir>report/html/</jmeter.result.html.dir>
-                <!--样式文件-->
-                <jmeter.stylesheet.dir></jmeter.stylesheet.dir>
-                <!--属性配置文件-->
-                <jmeter.properties.dir></jmeter.properties.dir>
             </properties>
         </profile>
     </profiles>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <!-- 删除旧的测试结果文件 -->
+                                <delete dir="${jmeter.result.dir}/lastest/" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 执行测试用例生成测试结果：jtl文件-->
             <plugin>
                 <groupId>com.lazerycode.jmeter</groupId>
                 <artifactId>jmeter-maven-plugin</artifactId>
@@ -64,9 +82,71 @@
                     </propertiesUser>
                     <!--指定测试结果文件输出格式-->
                     <resultsFileFormat>xml</resultsFileFormat>
-                    <resultsDirectory>${jmeter.result.jtl.dir}</resultsDirectory>
+                    <resultsDirectory>${jmeter.result.dir}/lastest/</resultsDirectory>
+                    <resultsFileFormat>xml</resultsFileFormat>
+                    <ignoreResultFailures>true</ignoreResultFailures>
+                    <testResultsTimestamp>false</testResultsTimestamp>
                 </configuration>
+            </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xml-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <transformationSets>
+                        <transformationSet>
+                            <dir>${jmeter.result.dir}/lastest/</dir>
+                            <stylesheet>${jmeter.stylesheet.dir}/jmeter.results.shanhe.me.xsl</stylesheet>
+                            <outputDir>${jmeter.result.dir}/lastest/</outputDir>
+                            <fileMappers>
+                                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
+                                    <!-- 设置转换后的报告文件的后缀名-->
+                                    <targetExtension>.html</targetExtension>
+                                </fileMapper>
+                            </fileMappers>
+                        </transformationSet>
+                    </transformationSets>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon</artifactId>
+                        <version>8.7</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${jmeter.result.dir}/${build_no}/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${jmeter.result.dir}/lastest/</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
