@@ -83,8 +83,8 @@
                     </propertiesUser>
                     <!--指定测试结果文件输出格式-->
                     <resultsFileFormat>xml</resultsFileFormat>
+                    <!--测试结果输出目录-->
                     <resultsDirectory>${jmeter.result.dir}/lastest/</resultsDirectory>
-                    <resultsFileFormat>xml</resultsFileFormat>
                     <ignoreResultFailures>true</ignoreResultFailures>
                     <testResultsTimestamp>false</testResultsTimestamp>
                 </configuration>
@@ -130,6 +130,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
                 <executions>
+                    <!--把生成的测试结果文件（html&jtl）复制到其他目录，避免下次构建后被删除。-->
                     <execution>
                         <id>copy-resources</id>
                         <!-- here the phase you need -->
