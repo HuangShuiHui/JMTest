@@ -31,6 +31,7 @@
         <jmeter.result.html.dir>report/html/</jmeter.result.html.dir>
         <jmeter.stylesheet.dir>resource/stylesheet/</jmeter.stylesheet.dir>
         <jmeter.properties.dir></jmeter.properties.dir>
+        <jmeter.testData.dir>${basedir}/src/test/jmeter/args/</jmeter.testData.dir>
     </properties>
 
     <!--配置环境变量-->
@@ -78,6 +79,7 @@
                 <configuration>
                     <propertiesUser>
                         <sampleName>google翻译</sampleName>
+                        <testData>${jmeter.testData.dir}</testData>
                     </propertiesUser>
                     <!--指定测试结果文件输出格式-->
                     <resultsFileFormat>xml</resultsFileFormat>
